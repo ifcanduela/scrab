@@ -83,11 +83,16 @@
 				</div>
 			</div>
 		</div>
+
+		<pre
+			class="flex-1 bg-slate-50 w-full overflow-auto p-4 rounded-md text-sm"
+		><code>{{ countLetters(letterList) }}</code></pre>
 	</div>
 </template>
 
 <script setup>
 	import { useStorage } from "@vueuse/core"
+	import countLetters from "@/lib/countLetters"
 
 	const wordLengthLimitOptions = [
 		{ label: "8", value: 8 },
