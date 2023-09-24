@@ -18,7 +18,7 @@
 				type="radio"
 				:value="option.value"
 				:id="`${id}--${option.value}`"
-				:name="name"
+				:name="id"
 				:checked="option.value === modelValue"
 				@input="update(option.value)"
 			/>
