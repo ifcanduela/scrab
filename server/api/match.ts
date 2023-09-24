@@ -3,8 +3,7 @@ import path from "path"
 import WordMatcher from "@/lib/WordMatcher.js"
 
 export default defineEventHandler(async (event) => {
-	const jsonPath = path.resolve("data/wordlist.json")
-	const json = await fs.readFile(jsonPath, "utf-8")
+	const json = await fs.readFile("data/wordlist.json", "utf-8")
 	const wordlist = JSON.parse(json)
 	const body = await readBody(event)
 
