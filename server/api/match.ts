@@ -1,10 +1,7 @@
-import fs from "fs/promises"
-import path from "path"
 import WordMatcher from "@/lib/WordMatcher.js"
+import wordlist from "@/data/wordlist.json" assert { type: "json" }
 
 export default defineEventHandler(async (event) => {
-	const json = await fs.readFile("data/wordlist.json", "utf-8")
-	const wordlist = JSON.parse(json)
 	const body = await readBody(event)
 
 	if (!body.letters) {

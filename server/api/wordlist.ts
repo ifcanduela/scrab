@@ -1,8 +1,5 @@
-import fs from "fs/promises"
+import wordlist from "@/data/wordlist.json" assert { type: "json" }
 
 export default defineEventHandler(async (event) => {
-	const json = await fs.readFile("data/wordlist.json", "utf-8")
-	const wordList = JSON.parse(json)
-
-	return wordList
+	return wordlist
 })
