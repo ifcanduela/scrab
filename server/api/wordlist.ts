@@ -1,5 +1,6 @@
-import wordlist from "@/data/wordlist.json" assert { type: "json" }
+import { readWords } from "~/server/Wordlist"
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (_event) => {
+	const wordlist = await readWords()
 	return wordlist
 })

@@ -1,4 +1,8 @@
 <template>
+	<Head>
+		<title>Escrábol</title>
+	</Head>
+
 	<div
 		class="layout min-h-screen flex flex-col justify-start items-center p-16"
 	>
@@ -83,16 +87,11 @@
 				</div>
 			</div>
 		</div>
-
-		<pre
-			class="flex-1 bg-slate-50 w-full overflow-auto p-4 rounded-md text-sm"
-		><code>{{ countLetters(letterList) }}</code></pre>
 	</div>
 </template>
 
 <script setup>
 	import { useStorage } from "@vueuse/core"
-	import countLetters from "@/lib/countLetters"
 
 	const wordLengthLimitOptions = [
 		{ label: "8", value: 8 },
@@ -114,22 +113,19 @@
 
 	const result = ref([])
 
-	watchEffect(
-		async () => {
-			const { data } = await useFetch("/api/match", {
-				method: "POST",
-				body: {
-					letters: letterList.value,
-					letterLimit: wordLengthLimit.value,
-					useWildcard: allowWildcard.value,
-					matchStart: startsWithString.value,
-					matchMiddle: containsString.value,
-					matchEnd: endsWithString.value,
-				},
-			})
+	watchEffect(async () => {
+		const { data } = await useFetch("/api/match", {
+			method: "POST",
+			body: {
+				letters: letterList.value,
+				letterLimit: wordLengthLimit.value,
+				useWildcard: allowWildcard.value,
+				matchStart: startsWithString.value,
+				matchMiddle: containsString.value,
+				matchEnd: endsWithString.value,
+			},
+		})
 
-			result.value = data.value
-		},
-		{ immediate: true },
-	)
+		result.value = data.value
+	})
 </script>

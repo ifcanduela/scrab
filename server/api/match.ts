@@ -1,8 +1,9 @@
 import WordMatcher from "@/lib/WordMatcher.js"
-import wordlist from "@/data/wordlist.json" assert { type: "json" }
+import { readWords } from "~/server/Wordlist"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
+	const wordlist = await readWords()
 
 	if (!body.letters) {
 		throw createError({
