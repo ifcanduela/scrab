@@ -114,18 +114,22 @@
 	const result = ref([])
 
 	watchEffect(async () => {
-		const { data } = await useFetch("/api/match", {
+		const data = await $fetch("/api/match", {
 			method: "POST",
-			body: {
+			initialCache: false,
+			headers: {
+				"Cache-Control": "no-cache",
+			},
+			body: JSON.stringify({
 				letters: letterList.value,
 				letterLimit: wordLengthLimit.value,
 				useWildcard: allowWildcard.value,
 				matchStart: startsWithString.value,
 				matchMiddle: containsString.value,
 				matchEnd: endsWithString.value,
-			},
+			}),
 		})
 
-		result.value = data.value
+		result.value = data
 	})
 </script>
