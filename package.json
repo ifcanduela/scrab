@@ -11,8 +11,10 @@
 	},
 	"devDependencies": {
 		"@nuxt/devtools": "latest",
+		"@phosphor-icons/core": "^2.0.2",
 		"nuxt": "^3.8.0",
-		"prettier": "^3.0.3"
+		"prettier": "^3.0.3",
+		"vite-svg-loader": "^4.0.0"
 	},
 	"dependencies": {
 		"@nuxt/image": "^1.0.0-rc.2",

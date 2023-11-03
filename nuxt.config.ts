@@ -1,4 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import svgLoader from "vite-svg-loader"
+
 export default defineNuxtConfig({
 	ssr: false,
 	devtools: { enabled: false },
@@ -6,4 +7,7 @@ export default defineNuxtConfig({
 		port: 3131,
 	},
 	modules: ["@nuxt/image", "@pinia/nuxt", "@nuxtjs/tailwindcss"],
+	vite: {
+		plugins: [svgLoader()],
+	},
 })
