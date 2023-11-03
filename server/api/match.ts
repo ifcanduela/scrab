@@ -1,9 +1,8 @@
 import WordMatcher from "@/lib/WordMatcher.js"
-import { readWords } from "~/server/Wordlist"
+import { createClient } from "@supabase/supabase-js"
 
 export default defineEventHandler(async (event) => {
 	const body = await readBody(event)
-	const wordlist = await readWords()
 
 	if (!body.letters) {
 		throw createError({
@@ -11,6 +10,33 @@ export default defineEventHandler(async (event) => {
 			statusCode: 400,
 		})
 	}
+
+	const config = useRuntimeConfig(event)
+
+	const supabase = createClient(
+		config.app.supabaseUrl,
+		config.app.supabaseKey,
+	)
+
+	const query = supabase.from("wordlist").select("*")
+
+	if (body.matchStart) {
+		query.ilike("word", `${body.matchStart}%`)
+	}
+
+	if (body.matchMiddle) {
+		query.ilike("word", `%${body.matchMiddle}%`)
+	}
+
+	if (body.matchEnd) {
+		query.ilike("word", `%${body.matchEnd}`)
+	}
+
+	const { data: wordlistResult } = await query
+
+	const wordlist = wordlistResult
+		? wordlistResult.map((word) => word.word)
+		: []
 
 	const matcher = new WordMatcher(wordlist.slice())
 
