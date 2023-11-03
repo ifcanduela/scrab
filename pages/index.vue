@@ -1,9 +1,6 @@
 <template>
-	<Head>
-		<title>Escrábol</title>
-	</Head>
-
 	<div
+		v-if="!pending"
 		class="layout min-h-screen flex flex-col justify-start items-center p-16"
 	>
 		<h1 class="font-bold text-center text-8xl mb-8 text-purple-500">
@@ -90,8 +87,13 @@
 	</div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+	import WordMatcher from "@/lib/WordMatcher"
 	import { useStorage } from "@vueuse/core"
+
+	useHead({
+		title: "Escrábol",
+	})
 
 	const wordLengthLimitOptions = [
 		{ label: "8", value: 8 },
@@ -113,23 +115,24 @@
 
 	const result = ref([])
 
-	watchEffect(async () => {
-		const data = await $fetch("/api/match", {
-			method: "POST",
-			initialCache: false,
-			headers: {
-				"Cache-Control": "no-cache",
-			},
-			body: JSON.stringify({
-				letters: letterList.value,
-				letterLimit: wordLengthLimit.value,
-				useWildcard: allowWildcard.value,
-				matchStart: startsWithString.value,
-				matchMiddle: containsString.value,
-				matchEnd: endsWithString.value,
-			}),
-		})
+	const { data: wordlist, pending } = useFetch(
+		"https://ifcanduela.com/scrab-server/",
+	)
 
-		result.value = data
+	watchEffect(async () => {
+		if (pending.value === false) {
+			const matcher = new WordMatcher(wordlist.value)
+
+			matcher.letters(letterList.value)
+			matcher.letterLimit(wordLengthLimit.value)
+			matcher.useWildcard(allowWildcard.value)
+			matcher.matchStart(startsWithString.value)
+			matcher.matchMiddle(containsString.value)
+			matcher.matchEnd(endsWithString.value)
+
+			result.value = matcher.match()
+		} else {
+			result.value = []
+		}
 	})
 </script>
