@@ -1,93 +1,94 @@
 <template>
-	<div
-		v-if="!pending"
-		class="layout min-h-screen flex flex-col justify-start items-center p-16"
-	>
-		<h1 class="font-bold text-center text-8xl mb-8 text-purple-500">
-			Scrab
-		</h1>
+	<LoadingBlock :loading="pending">
+		<div
+			class="layout min-h-screen flex flex-col justify-start items-center p-16"
+		>
+			<MainMenu>
+				<NuxtLink
+					to="/words"
+					class="bg-purple-100 hover:bg-purple-200 text-purple-400 hover:text-purple-600 rounded px-3 py-3 leading-none inline-flex gap-2 items-center"
+					><ManageIcon class="w-4" /> Manage wordlist</NuxtLink
+				>
+			</MainMenu>
+			<h1 class="font-bold text-center text-8xl mb-8 text-purple-500">
+				Scrab
+			</h1>
 
-		<div class="flex gap-4 min-w-[40rem]">
-			<div class="flex-1">
-				<div class="flex flex-col gap-2 mb-4">
-					<label class="font-bold opacity-50" for="letterList"
-						>Player tiles</label
-					>
-					<input
-						v-model="letterList"
-						class="border border-purple-200 text-xl p-2 rounded-md"
-						:class="{ 'bg-red-50': tooManyLetters }"
-						id="letterList"
-					/>
+			<div class="flex gap-4 min-w-[40rem]">
+				<div class="flex-1">
+					<FormGroup label="Player tiles" id="letterList">
+						<input
+							v-model="letterList"
+							class="border border-purple-200 text-xl p-2 rounded-md"
+							:class="{ 'bg-red-50': tooManyLetters }"
+							id="letterList"
+						/>
+					</FormGroup>
+
+					<FormGroup label="Wildcards">
+						<div class="flex gap-2">
+							<WildcardBox v-model="wildcards.a" />
+							<WildcardBox v-model="wildcards.b" />
+						</div>
+					</FormGroup>
+
+					<FormGroup label="Starts with" id="startsWithString">
+						<input
+							class="border border-purple-200 text-xl p-2 rounded-md"
+							v-model="startsWithString"
+							id="startsWithString"
+						/>
+					</FormGroup>
+
+					<FormGroup label="Contains" id="containsString">
+						<input
+							class="border border-purple-200 text-xl p-2 rounded-md"
+							v-model="containsString"
+							id="containsString"
+						/>
+					</FormGroup>
+
+					<FormGroup label="Ends with" id="endsWithString">
+						<input
+							class="border border-purple-200 text-xl p-2 rounded-md"
+							v-model="endsWithString"
+							id="endsWithString"
+						/>
+					</FormGroup>
+
+					<FormGroup label="Word length limit" id="wordLengthLimit">
+						<div>
+							<RadioToggle
+								v-model="wordLengthLimit"
+								:options="wordLengthLimitOptions"
+							/>
+						</div>
+					</FormGroup>
 				</div>
 
-				<div class="flex flex-col gap-2 mb-4">
-					<label class="font-bold opacity-50" for="startsWithString"
-						>Starts with</label
-					>
-					<input
-						class="border border-purple-200 text-xl p-2 rounded-md"
-						v-model="startsWithString"
-						id="startsWithString"
-					/>
-				</div>
+				<div class="flex-1 bg-purple-100 p-2" v-if="result.length">
+					<div class="text-sm mb-2">
+						<span class="font-bold text-purple-500">{{
+							result.length.toLocaleString()
+						}}</span>
+						results
+					</div>
 
-				<div class="flex flex-col gap-2 mb-4">
-					<label class="font-bold opacity-50" for="containsString"
-						>Contains</label
-					>
-					<input
-						class="border border-purple-200 text-xl p-2 rounded-md"
-						v-model="containsString"
-						id="containsString"
-					/>
-				</div>
-
-				<div class="flex flex-col gap-2 mb-4">
-					<label class="font-bold opacity-50" for="endsWithString"
-						>Ends with</label
-					>
-					<input
-						class="border border-purple-200 text-xl p-2 rounded-md"
-						v-model="endsWithString"
-						id="endsWithString"
-					/>
-				</div>
-
-				<div class="flex flex-col gap-2 mb-4">
-					<label class="font-bold opacity-50" for="endsWithString"
-						>Word length limit</label
-					>
 					<div>
-						<RadioToggle
-							v-model="wordLengthLimit"
-							:options="wordLengthLimitOptions"
+						<WordResult
+							v-for="word in result"
+							:key="word"
+							:word="word"
 						/>
 					</div>
 				</div>
 			</div>
-
-			<div class="flex-1 bg-purple-100 p-2" v-if="result.length">
-				<div class="text-sm mb-2">
-					<span class="font-bold text-purple-500">{{
-						result.length.toLocaleString()
-					}}</span>
-					results
-				</div>
-
-				<div>
-					<WordResult
-						v-for="word in result"
-						:key="word"
-						:word="word"
-					/>
-				</div>
-			</div>
 		</div>
-	</div>
+	</LoadingBlock>
 </template>
 
 <script setup lang="ts">
+	import ManageIcon from "@phosphor-icons/core/assets/bold/gear-six-bold.svg?component"
 	import WordMatcher from "@/lib/WordMatcher"
 	import { useStorage } from "@vueuse/core"
 
@@ -107,7 +108,10 @@
 
 	const wordLengthLimit = useStorage("wordLengthLimit", 0)
 
-	const allowWildcard = useStorage("allowWildcard", true)
+	const wildcards = useStorage("wildcards", {
+		a: false,
+		b: false,
+	})
 
 	const letterList = useStorage("letterList", "aard")
 
@@ -119,16 +123,32 @@
 		"https://ifcanduela.com/scrab-server/",
 	)
 
+	const wildcardCount = computed(() => {
+		let count = 0
+
+		if (wildcards.value.a) {
+			count++
+		}
+
+		if (wildcards.value.b) {
+			count++
+		}
+
+		return count
+	})
+
 	watchEffect(async () => {
 		if (pending.value === false) {
 			const matcher = new WordMatcher(wordlist.value)
 
 			matcher.letters(letterList.value)
 			matcher.letterLimit(wordLengthLimit.value)
-			matcher.useWildcard(allowWildcard.value)
+			matcher.useWildcard(wildcardCount.value)
 			matcher.matchStart(startsWithString.value)
 			matcher.matchMiddle(containsString.value)
 			matcher.matchEnd(endsWithString.value)
+
+			console.log({ matcher })
 
 			result.value = matcher.match()
 		} else {
