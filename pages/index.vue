@@ -79,6 +79,7 @@
 							v-for="word in result"
 							:key="word"
 							:word="word"
+							:letters="totalLetterList"
 						/>
 					</div>
 				</div>
@@ -116,6 +117,15 @@
 	const letterList = useStorage("letterList", "aard")
 
 	const tooManyLetters = computed(() => letterList.value.length > 8)
+
+	const totalLetterList = computed(() => {
+		return [
+			...letterList.value,
+			...startsWithString.value,
+			...containsString.value,
+			...endsWithString.value,
+		]
+	})
 
 	const result = ref([])
 
