@@ -2,7 +2,7 @@ import fs from "fs/promises"
 import WordMatcher from "../lib/WordMatcher.js"
 
 async function findWordsCommand(_params, program) {
-	const json = await fs.readFile("public/wordlist.json", "utf-8")
+	const json = await fs.readFile("data/wordlist.json", "utf-8")
 	const allWords = JSON.parse(json)
 
 	const opts = program.opts()
@@ -17,7 +17,7 @@ async function findWordsCommand(_params, program) {
 		wordMatcher.matchEnd(opts.end)
 	}
 
-	wordMatcher.useWildcard(!!opts.wildcard)
+	wordMatcher.useWildcard(0)
 
 	const result = wordMatcher.match(opts.letters)
 
