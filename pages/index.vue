@@ -1,88 +1,84 @@
 <template>
 	<LoadingBlock :loading="pending">
-		<div
-			class="layout min-h-screen flex flex-col justify-start items-center p-1 sm:p-16"
-		>
-			<MainMenu>
-				<NuxtLink
-					to="/words"
-					class="bg-purple-100 hover:bg-purple-200 text-purple-400 hover:text-purple-600 rounded px-3 py-3 leading-none inline-flex gap-2 items-center"
-					><ManageIcon class="w-4" /> Manage wordlist</NuxtLink
-				>
-			</MainMenu>
+		<MainMenu>
+			<NuxtLink
+				to="/words"
+				class="bg-purple-100 hover:bg-purple-200 text-purple-400 hover:text-purple-600 rounded px-3 py-3 leading-none inline-flex gap-2 items-center"
+				><ManageIcon class="w-4" /> Manage wordlist</NuxtLink
+			>
+		</MainMenu>
 
-			<PageTitle>Scrab</PageTitle>
+		<PageTitle>Scrab</PageTitle>
 
-			<div class="flex gap-4 w-full max-w-[40rem]">
-				<div class="flex-1">
-					<FormGroup label="Player tiles" id="letterList">
+		<div class="flex gap-4 w-full">
+			<div class="flex-1">
+				<FormGroup label="Player tiles" id="letterList">
+					<input
+						v-model="letterList"
+						class="border border-purple-200 text-xl p-2 rounded-md"
+						:class="{ 'bg-red-50': tooManyLetters }"
+						id="letterList"
+					/>
+				</FormGroup>
+
+				<FormGroup label="Wildcards">
+					<div class="flex gap-2">
+						<WildcardBox v-model="wildcards.a" />
+						<WildcardBox v-model="wildcards.b" />
+					</div>
+				</FormGroup>
+
+				<div class="flex gap-2">
+					<FormGroup label="Starts with" id="startsWithString">
 						<input
-							v-model="letterList"
-							class="border border-purple-200 text-xl p-2 rounded-md"
-							:class="{ 'bg-red-50': tooManyLetters }"
-							id="letterList"
+							class="border border-purple-200 text-xl p-2 rounded-md w-24"
+							v-model="startsWithString"
+							id="startsWithString"
 						/>
 					</FormGroup>
 
-					<FormGroup label="Wildcards">
-						<div class="flex gap-2">
-							<WildcardBox v-model="wildcards.a" />
-							<WildcardBox v-model="wildcards.b" />
-						</div>
+					<FormGroup label="Contains" id="containsString">
+						<input
+							class="border border-purple-200 text-xl p-2 rounded-md w-24"
+							v-model="containsString"
+							id="containsString"
+						/>
 					</FormGroup>
 
-					<div class="flex gap-2">
-						<FormGroup label="Starts with" id="startsWithString">
-							<input
-								class="border border-purple-200 text-xl p-2 rounded-md w-24"
-								v-model="startsWithString"
-								id="startsWithString"
-							/>
-						</FormGroup>
-
-						<FormGroup label="Contains" id="containsString">
-							<input
-								class="border border-purple-200 text-xl p-2 rounded-md w-24"
-								v-model="containsString"
-								id="containsString"
-							/>
-						</FormGroup>
-
-						<FormGroup label="Ends with" id="endsWithString">
-							<input
-								class="border border-purple-200 text-xl p-2 rounded-md w-24"
-								v-model="endsWithString"
-								id="endsWithString"
-							/>
-						</FormGroup>
-					</div>
-
-					<FormGroup label="Word length limit" id="wordLengthLimit">
-						<div>
-							<RadioToggle
-								v-model="wordLengthLimit"
-								:options="wordLengthLimitOptions"
-							/>
-						</div>
+					<FormGroup label="Ends with" id="endsWithString">
+						<input
+							class="border border-purple-200 text-xl p-2 rounded-md w-24"
+							v-model="endsWithString"
+							id="endsWithString"
+						/>
 					</FormGroup>
 				</div>
 
-				<div class="flex-1 bg-purple-100 p-2" v-if="result.length">
-					<div class="text-sm mb-2">
-						<span class="font-bold text-purple-500">{{
-							result.length.toLocaleString()
-						}}</span>
-						results
-					</div>
-
+				<FormGroup label="Word length limit" id="wordLengthLimit">
 					<div>
-						<WordResult
-							v-for="word in result"
-							:key="word"
-							:word="word"
-							:letters="totalLetterList"
+						<RadioToggle
+							v-model="wordLengthLimit"
+							:options="wordLengthLimitOptions"
 						/>
 					</div>
+				</FormGroup>
+			</div>
+
+			<div class="flex-1 bg-purple-100 p-2" v-if="result.length">
+				<div class="text-sm mb-2">
+					<span class="font-bold text-purple-500">{{
+						result.length.toLocaleString()
+					}}</span>
+					results
+				</div>
+
+				<div>
+					<WordResult
+						v-for="word in result"
+						:key="word"
+						:word="word"
+						:letters="totalLetterList"
+					/>
 				</div>
 			</div>
 		</div>
