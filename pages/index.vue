@@ -121,10 +121,10 @@
 
 	const totalLetterList = computed(() => {
 		return [
-			...letterList.value,
-			...startsWithString.value,
-			...containsString.value,
-			...endsWithString.value,
+			...letterList.value.toLowerCase(),
+			...startsWithString.value.toLowerCase(),
+			...containsString.value.toLowerCase(),
+			...endsWithString.value.toLowerCase(),
 		]
 	})
 
