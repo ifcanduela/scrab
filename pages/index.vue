@@ -1,7 +1,7 @@
 <template>
 	<LoadingBlock :loading="pending">
 		<div
-			class="layout min-h-screen flex flex-col justify-start items-center p-16"
+			class="layout min-h-screen flex flex-col justify-start items-center p-1 sm:p-16"
 		>
 			<MainMenu>
 				<NuxtLink
@@ -10,11 +10,10 @@
 					><ManageIcon class="w-4" /> Manage wordlist</NuxtLink
 				>
 			</MainMenu>
-			<h1 class="font-bold text-center text-8xl mb-8 text-purple-500">
-				Scrab
-			</h1>
 
-			<div class="flex gap-4 min-w-[40rem]">
+			<PageTitle>Scrab</PageTitle>
+
+			<div class="flex gap-4 w-full max-w-[40rem]">
 				<div class="flex-1">
 					<FormGroup label="Player tiles" id="letterList">
 						<input
