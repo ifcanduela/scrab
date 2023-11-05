@@ -16,8 +16,20 @@
 		letters: Array,
 	})
 
+	const playerHasY = props.letters.includes("y")
+	const wordHasIJ = /ij/.test(props.word)
+
 	const highlightedWord = computed(() => {
 		const letterCount = countLetters(props.letters.join(""))
+		if (wordHasIJ && playerHasY) {
+			letterCount.i = letterCount.i
+				? letterCount.i + letterCount.y
+				: letterCount.y
+			letterCount.j = letterCount.j
+				? letterCount.j + letterCount.y
+				: letterCount.y
+		}
+
 		const spans = props.word.split("").map((letter) => {
 			const count = letterCount[letter]
 			if (count) {
@@ -27,7 +39,6 @@
 				return `<span class="text-emerald-700">${letter}</span>`
 			}
 		})
-		console.log(letterCount)
 
 		return spans.join("")
 	})

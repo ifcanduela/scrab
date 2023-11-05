@@ -32,29 +32,31 @@
 						</div>
 					</FormGroup>
 
-					<FormGroup label="Starts with" id="startsWithString">
-						<input
-							class="border border-purple-200 text-xl p-2 rounded-md"
-							v-model="startsWithString"
-							id="startsWithString"
-						/>
-					</FormGroup>
+					<div class="flex gap-2">
+						<FormGroup label="Starts with" id="startsWithString">
+							<input
+								class="border border-purple-200 text-xl p-2 rounded-md w-24"
+								v-model="startsWithString"
+								id="startsWithString"
+							/>
+						</FormGroup>
 
-					<FormGroup label="Contains" id="containsString">
-						<input
-							class="border border-purple-200 text-xl p-2 rounded-md"
-							v-model="containsString"
-							id="containsString"
-						/>
-					</FormGroup>
+						<FormGroup label="Contains" id="containsString">
+							<input
+								class="border border-purple-200 text-xl p-2 rounded-md w-24"
+								v-model="containsString"
+								id="containsString"
+							/>
+						</FormGroup>
 
-					<FormGroup label="Ends with" id="endsWithString">
-						<input
-							class="border border-purple-200 text-xl p-2 rounded-md"
-							v-model="endsWithString"
-							id="endsWithString"
-						/>
-					</FormGroup>
+						<FormGroup label="Ends with" id="endsWithString">
+							<input
+								class="border border-purple-200 text-xl p-2 rounded-md w-24"
+								v-model="endsWithString"
+								id="endsWithString"
+							/>
+						</FormGroup>
+					</div>
 
 					<FormGroup label="Word length limit" id="wordLengthLimit">
 						<div>
@@ -157,8 +159,6 @@
 			matcher.matchStart(startsWithString.value)
 			matcher.matchMiddle(containsString.value)
 			matcher.matchEnd(endsWithString.value)
-
-			console.log({ matcher })
 
 			result.value = matcher.match()
 		} else {
