@@ -14,9 +14,10 @@
 			<div class="flex-1">
 				<FormGroup label="Player tiles" id="letterList">
 					<input
-						v-model="letterList"
+						type="text"
 						class="border border-purple-200 text-xl p-2 rounded-md"
 						:class="{ 'bg-red-50': tooManyLetters }"
+						v-model="letterList"
 						id="letterList"
 					/>
 				</FormGroup>
@@ -31,6 +32,7 @@
 				<div class="flex gap-2">
 					<FormGroup label="Starts with" id="startsWithString">
 						<input
+							type="text"
 							class="border border-purple-200 text-xl p-2 rounded-md w-24"
 							v-model="startsWithString"
 							id="startsWithString"
@@ -39,6 +41,7 @@
 
 					<FormGroup label="Contains" id="containsString">
 						<input
+							type="text"
 							class="border border-purple-200 text-xl p-2 rounded-md w-24"
 							v-model="containsString"
 							id="containsString"
@@ -47,12 +50,37 @@
 
 					<FormGroup label="Ends with" id="endsWithString">
 						<input
+							type="text"
 							class="border border-purple-200 text-xl p-2 rounded-md w-24"
 							v-model="endsWithString"
 							id="endsWithString"
 						/>
 					</FormGroup>
 				</div>
+
+				<FormGroup label="Anchoring" id="anchoring">
+					<div class="flex gap-2">
+						<input
+							type="text"
+							class="border border-purple-200 text-xl p-2 rounded-md w-24"
+							v-model="anchorLetter"
+							placeholder="A"
+						/>
+						<input
+							type="number"
+							class="border border-purple-200 text-xl p-2 rounded-md w-24"
+							v-model.number="anchorPosition"
+							placeholder="4"
+						/>
+						<select
+							class="bg-white border border-purple-200 text-xl p-2 rounded-md w-24"
+							v-model="anchorDirection"
+						>
+							<option value="start">start</option>
+							<option value="end">end</option>
+						</select>
+					</div>
+				</FormGroup>
 
 				<FormGroup label="Word length limit" id="wordLengthLimit">
 					<div>
@@ -104,6 +132,10 @@
 	const endsWithString = useStorage("endsWithString", "")
 	const containsString = useStorage("containsString", "")
 
+	const anchorLetter = useStorage("anchorLetter", "")
+	const anchorPosition = useStorage("anchorPosition", 0)
+	const anchorDirection = useStorage("anchorDirection", "start")
+
 	const wordLengthLimit = useStorage("wordLengthLimit", 0)
 
 	const wildcards = useStorage("wildcards", {
@@ -154,6 +186,14 @@
 			matcher.matchStart(startsWithString.value)
 			matcher.matchMiddle(containsString.value)
 			matcher.matchEnd(endsWithString.value)
+
+			if (anchorLetter.value) {
+				matcher.anchorLetter(
+					anchorLetter.value,
+					anchorPosition.value,
+					anchorDirection.value,
+				)
+			}
 
 			result.value = matcher.match()
 		} else {
