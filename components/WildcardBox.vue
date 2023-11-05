@@ -30,6 +30,6 @@
 	const emit = defineEmits(["update:modelValue"])
 
 	function handleChange(event) {
-		emit("update:modelValue", event.target.checked)
+		emit("update:modelValue", !event.target.checked)
 	}
 </script>
