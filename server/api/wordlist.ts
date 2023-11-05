@@ -33,7 +33,6 @@ export default defineEventHandler(async (event) => {
 
 	const selectQuery = supabase.from("wordlist").select("*").range(from, to)
 	if (filter.length) {
-		console.log("filter", filter)
 		selectQuery.ilike("word", `%${filter}%`)
 	}
 	const { data: wordlist, error } = await selectQuery
