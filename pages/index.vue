@@ -13,12 +13,10 @@
 		<div class="flex gap-4 w-full">
 			<div class="flex-1">
 				<FormGroup label="Player tiles" id="letterList">
-					<input
-						type="text"
-						class="border border-purple-200 text-xl p-2 rounded-md"
-						:class="{ 'bg-red-50': tooManyLetters }"
+					<TextBox
 						v-model="letterList"
 						id="letterList"
+						:class="{ 'bg-red-50': tooManyLetters }"
 					/>
 				</FormGroup>
 
@@ -30,51 +28,51 @@
 				</FormGroup>
 
 				<div class="flex gap-2">
-					<FormGroup label="Starts with" id="startsWithString">
-						<input
-							type="text"
-							class="border border-purple-200 text-xl p-2 rounded-md w-24"
+					<FormGroup
+						class="grow-1"
+						label="Starts with"
+						id="startsWithString"
+					>
+						<TextBox
 							v-model="startsWithString"
 							id="startsWithString"
 						/>
 					</FormGroup>
 
-					<FormGroup label="Contains" id="containsString">
-						<input
-							type="text"
-							class="border border-purple-200 text-xl p-2 rounded-md w-24"
-							v-model="containsString"
-							id="containsString"
-						/>
+					<FormGroup
+						class="grow-1"
+						label="Contains"
+						id="containsString"
+					>
+						<TextBox v-model="containsString" id="containsString" />
 					</FormGroup>
 
-					<FormGroup label="Ends with" id="endsWithString">
-						<input
-							type="text"
-							class="border border-purple-200 text-xl p-2 rounded-md w-24"
-							v-model="endsWithString"
-							id="endsWithString"
-						/>
+					<FormGroup
+						class="grow-1"
+						label="Ends with"
+						id="endsWithString"
+					>
+						<TextBox v-model="endsWithString" id="endsWithString" />
 					</FormGroup>
 				</div>
 
 				<FormGroup label="Anchoring" id="anchoring">
-					<div class="flex gap-2">
-						<input
-							type="text"
-							class="border border-purple-200 text-xl p-2 rounded-md w-24"
+					<div
+						class="grid gap-2"
+						style="grid-template-columns: repeat(3, 1fr)"
+					>
+						<TextBox
 							v-model="anchorLetter"
 							id="anchoring"
 							placeholder="A"
 						/>
-						<input
+						<TextBox
 							type="number"
-							class="border border-purple-200 text-xl p-2 rounded-md w-24"
 							v-model.number="anchorPosition"
 							placeholder="4"
 						/>
 						<select
-							class="bg-white border border-purple-200 text-xl p-2 rounded-md w-24"
+							class="bg-white border border-purple-200 text-md md:text-xl p-1 md:p-2 rounded-md"
 							v-model="anchorDirection"
 						>
 							<option value="start">start</option>
@@ -94,14 +92,32 @@
 			</div>
 
 			<div class="flex-1 bg-purple-100 p-2" v-if="result.length">
-				<div class="text-sm mb-2">
-					<span class="font-bold text-purple-500">{{
-						resultCount.toLocaleString()
-					}}</span>
-					results
+				<div class="flex justify-between mb-2">
+					<div class="text-sm">
+						<span class="font-bold text-purple-500">{{
+							resultCount.toLocaleString()
+						}}</span>
+						results
+					</div>
+					<div class="flex gap-1">
+						<button
+							class="text-xs text-purple-100 bg-purple-400 px-1 rounded"
+							:class="{ 'bg-purple-700': sort === 'length' }"
+							@click="sort = 'length'"
+						>
+							by length
+						</button>
+						<button
+							class="text-xs text-purple-100 bg-purple-400 px-1 rounded"
+							:class="{ 'bg-purple-700': sort === 'score' }"
+							@click="sort = 'score'"
+						>
+							by score
+						</button>
+					</div>
 				</div>
 
-				<div>
+				<div class="flex flex-col gap-2">
 					<WordResult
 						v-for="word in result"
 						:key="word"
@@ -115,13 +131,18 @@
 </template>
 
 <script setup lang="ts">
-	import ManageIcon from "@phosphor-icons/core/assets/bold/gear-six-bold.svg?component"
-	import WordMatcher from "@/lib/WordMatcher"
 	import { useStorage } from "@vueuse/core"
+
+	import ManageIcon from "@phosphor-icons/core/assets/bold/gear-six-bold.svg?component"
+
+	import ScoreMaker from "@/lib/ScoreMaker"
+	import WordMatcher from "@/lib/WordMatcher"
 
 	useHead({
 		title: "Escrábol",
 	})
+
+	const sort = useStorage("sort", "length")
 
 	const wordLengthLimitOptions = [
 		{ label: "8", value: 8 },
@@ -199,6 +220,12 @@
 
 			const results = matcher.match()
 			resultCount.value = results.length
+
+			if (sort.value === "score") {
+				const sm = new ScoreMaker()
+				results.sort((a, b) => sm.getScore(b) - sm.getScore(a))
+			}
+
 			result.value = results.slice(0, 25)
 		} else {
 			result.value = []

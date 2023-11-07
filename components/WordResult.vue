@@ -1,5 +1,5 @@
 <template>
-	<div class="mb-2">
+	<div>
 		<div
 			class="font-bold text-purple-700 tracking-wide"
 			v-html="highlightedWord"
