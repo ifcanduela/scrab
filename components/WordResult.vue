@@ -4,12 +4,19 @@
 			class="font-bold text-purple-700 tracking-wide"
 			v-html="highlightedWord"
 		></div>
-		<div class="text-sm opacity-50">{{ word.length }} letters</div>
+		<div class="text-sm opacity-50">
+			<span
+				class="text-xs bg-purple-200 py-1 px-2 rounded-md text-purple-700"
+				><strong class="font-bold">{{ score }}</strong> points</span
+			>
+			{{ word.length }} letters
+		</div>
 	</div>
 </template>
 
 <script setup>
 	import countLetters from "@/lib/countLetters"
+	import ScoreMaker from "@/lib/ScoreMaker"
 
 	const props = defineProps({
 		word: String,
@@ -18,6 +25,9 @@
 
 	const playerHasY = props.letters.includes("y")
 	const wordHasIJ = /ij/.test(props.word)
+
+	const sm = new ScoreMaker()
+	const score = sm.getScore(props.word)
 
 	const highlightedWord = computed(() => {
 		const letterCount = countLetters(props.letters.join(""))
