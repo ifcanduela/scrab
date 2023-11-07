@@ -64,6 +64,7 @@
 							type="text"
 							class="border border-purple-200 text-xl p-2 rounded-md w-24"
 							v-model="anchorLetter"
+							id="anchoring"
 							placeholder="A"
 						/>
 						<input
@@ -182,7 +183,7 @@
 
 			matcher.letters(letterList.value)
 			matcher.letterLimit(wordLengthLimit.value)
-			matcher.useWildcard(wildcardCount.value)
+			matcher.useWildcards(wildcardCount.value)
 			matcher.matchStart(startsWithString.value)
 			matcher.matchMiddle(containsString.value)
 			matcher.matchEnd(endsWithString.value)

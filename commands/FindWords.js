@@ -17,7 +17,7 @@ async function findWordsCommand(_params, program) {
 		wordMatcher.matchEnd(opts.end)
 	}
 
-	wordMatcher.useWildcard(0)
+	wordMatcher.useWildcards(0)
 
 	const result = wordMatcher.match(opts.letters)
 
