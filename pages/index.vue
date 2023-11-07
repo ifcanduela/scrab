@@ -96,7 +96,7 @@
 			<div class="flex-1 bg-purple-100 p-2" v-if="result.length">
 				<div class="text-sm mb-2">
 					<span class="font-bold text-purple-500">{{
-						result.length.toLocaleString()
+						resultCount.toLocaleString()
 					}}</span>
 					results
 				</div>
@@ -158,6 +158,7 @@
 	})
 
 	const result = ref([])
+	const resultCount = ref(0)
 
 	const { data: wordlist, pending } = useFetch(
 		"https://ifcanduela.com/scrab-server/",
@@ -196,7 +197,9 @@
 				)
 			}
 
-			result.value = matcher.match()
+			const results = matcher.match()
+			resultCount.value = results.length
+			result.value = results.slice(0, 25)
 		} else {
 			result.value = []
 		}
