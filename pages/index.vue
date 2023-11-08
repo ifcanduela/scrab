@@ -230,7 +230,9 @@
 
 			if (sort.value === "score") {
 				const sm = new ScoreMaker()
-				results.sort((a, b) => sm.getScore(b) - sm.getScore(a))
+				results.sort(
+					(a: string, b: string) => sm.getScore(b) - sm.getScore(a),
+				)
 			}
 
 			result.value = results.slice(0, 25)
