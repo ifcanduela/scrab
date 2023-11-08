@@ -166,7 +166,7 @@
 	const anchorPosition = useStorage("anchorPosition", 0)
 	const anchorDirection = useStorage("anchorDirection", "start")
 
-	const wordLengthLimit = useStorage("wordLengthLimit", 0)
+	const wordLengthLimit = useStorage("wordLengthLimit", 9)
 
 	const wildcards = useStorage("wildcards", {
 		a: false,
@@ -252,6 +252,6 @@
 		anchorLetter.value = ""
 		anchorPosition.value = 0
 		anchorDirection.value = "start"
-		wordLengthLimit.value = 15
+		wordLengthLimit.value = 9
 	}
 </script>
