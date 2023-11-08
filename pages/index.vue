@@ -153,7 +153,7 @@
 
 	const wordLengthLimitOptions = [
 		{ label: "8", value: 8 },
-		{ label: "8", value: 9 },
+		{ label: "9", value: 9 },
 		{ label: "15", value: 15 },
 		{ label: "No limit", value: 0 },
 	]
