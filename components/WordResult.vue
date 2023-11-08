@@ -20,7 +20,7 @@
 
 	const props = defineProps({
 		word: String,
-		letters: Array,
+		letters: { type: Array, default: [] },
 	})
 
 	const playerHasY = props.letters.includes("y")

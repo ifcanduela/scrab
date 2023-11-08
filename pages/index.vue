@@ -6,6 +6,13 @@
 				class="bg-purple-100 hover:bg-purple-200 text-purple-400 hover:text-purple-600 rounded px-3 py-3 leading-none inline-flex gap-2 items-center"
 				><ManageIcon class="w-4" /> Manage wordlist</NuxtLink
 			>
+			<button
+				class="inline-flex gap-2 bg-white hover:bg-purple-100 border border-purple-400 text-purple-400 px-4 py-2 rounded"
+				@click="handleResetClick"
+			>
+				<ResetIcon class="w-4" />
+				Reset search
+			</button>
 		</MainMenu>
 
 		<PageTitle>Scrab</PageTitle>
@@ -134,7 +141,7 @@
 	import { useStorage } from "@vueuse/core"
 
 	import ManageIcon from "@phosphor-icons/core/assets/bold/gear-six-bold.svg?component"
-
+	import ResetIcon from "@phosphor-icons/core/assets/bold/trash-bold.svg?component"
 	import ScoreMaker from "@/lib/ScoreMaker"
 	import WordMatcher from "@/lib/WordMatcher"
 
@@ -199,7 +206,7 @@
 		return count
 	})
 
-	watchEffect(async () => {
+	watchEffect(() => {
 		if (pending.value === false) {
 			const matcher = new WordMatcher(wordlist.value)
 
@@ -231,4 +238,17 @@
 			result.value = []
 		}
 	})
+
+	function handleResetClick() {
+		letterList.value = ""
+		wildcards.value.a = false
+		wildcards.value.b = false
+		startsWithString.value = ""
+		endsWithString.value = ""
+		containsString.value = ""
+		anchorLetter.value = ""
+		anchorPosition.value = 0
+		anchorDirection.value = "start"
+		wordLengthLimit.value = 15
+	}
 </script>
