@@ -10,8 +10,7 @@
 				class="inline-flex gap-2 bg-white hover:bg-purple-100 border border-purple-400 text-purple-400 px-4 py-2 rounded"
 				@click="handleResetClick"
 			>
-				<ResetIcon class="w-4" />
-				Reset search
+				<ResetIcon class="w-4" /> Reset search
 			</button>
 		</MainMenu>
 
